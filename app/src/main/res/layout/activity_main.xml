@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="测试对话"
+            android:gravity="center"
+            android:textSize="40sp"/>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/connect_user1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="点击连接融云server（杨阳）" />
+
+    <Button
+        android:id="@+id/connect_user2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="点击连接融云server（用户2）" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="注册token"
+            android:gravity="center"
+            android:layout_marginTop="50dp"
+            android:textSize="40sp"/>
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/id_et_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入昵称" />
+
+    <EditText
+        android:id="@+id/id_et_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:hint="请输入用户名..." />
+
+    <EditText
+        android:id="@+id/id_et_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入密码..." />
+    <Button
+        android:id="@+id/id_token"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:text="根据用户名获取token" />
+
+    <Button
+        android:id="@+id/id_tokenlogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="根据刚刚获取的token登录" />
+    <EditText
+        android:id="@+id/id_et_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="测试..." />
+</LinearLayout>
+
+
