@@ -48,11 +48,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText et_password;
     private EditText et_confirm_password;
 
-    //获取用户输入的值
-    private String nickname = null;  //昵称
-    private String pass = null;  //密码
-    private String confirm_pass = null;  //确认密码
     private String token = null;  //获取的token
+    private User user;
 
     private RongCloudMethodUtil RongUtil;
 
@@ -62,12 +59,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private TextView tv_message;
     private static final String TAG = "RegisterActivity";
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             Bundle bundle = msg.getData();
             String token_state = bundle.getString("token");
-            if(token_state == "token_success"){
+            if (token_state == "token_success") {
                 //开始执行第二个请求
                 System.out.println("开始执行第二个请求");
                 tv_message.setText(token);
@@ -150,41 +147,44 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         registerPage.show(RegisterActivity.this);
     }
 
-    /**
-     * 获取EditText的值
-     */
-    public void obtainEditTextInfo() {
-        nickname = et_nickname.getText().toString();
-        pass = et_password.getText().toString();
-        confirm_pass = et_confirm_password.getText().toString();
-        System.out.println();
-    }
 
     /**
      * 获取用户输入的数据
      *
      * @return
      */
-    public User obtainUserRegisterInfo() {
+    public void obtainUserRegisterInfo() {
 
-        obtainEditTextInfo();
-        User user = new User();
+        //获取用户输入的值
+        //昵称
+        String nickname = et_nickname.getText().toString();
+        //密码
+        String pass = et_password.getText().toString();
+
+        //确认密码
+        String confirm_pass = et_confirm_password.getText().toString();
+
+        System.out.println(phone + "/" + pass + "/" + confirm_pass);
+
         //先验证填写是否为空
-        if (phone != null && nickname != null && pass != null && confirm_pass != null) {  //如果为空请重新填写
-            if (!pass.equals(confirm_pass)) {  //密码和确认密码不同
-                Toast.makeText(RegisterActivity.this, "密码和确认密码不同", Toast.LENGTH_SHORT).show();
-            } else if (phone != null && nickname != null && pass.equals(confirm_pass)) {
-                user.setPhone(phone);
-                user.setNickname(nickname);
-                user.setPassword(pass);
-                token = obtainUserToken(phone, nickname, ConstantUrl.imageDefaultUrl);  //获取token
-                user.setToken(token);
+        if (phone == null) {
+            Toast.makeText(RegisterActivity.this, "需要先进行手机验证", Toast.LENGTH_SHORT).show();
+        } else if (nickname.equals("")) {
+            Toast.makeText(RegisterActivity.this, "昵称不能为空", Toast.LENGTH_SHORT).show();
+        } else if (pass.equals("") || confirm_pass.equals("") || (pass.equals("") && confirm_pass.equals(""))) {  //密码和确认密码不同
+            Toast.makeText(RegisterActivity.this, "密码和确认密码不能为空", Toast.LENGTH_SHORT).show();
+        } else if (!pass.equals(confirm_pass)) {  //密码和确认密码不同
+            Toast.makeText(RegisterActivity.this, "密码和确认密码不同", Toast.LENGTH_SHORT).show();
+        } else if (phone != null && !nickname.equals("") && !pass.equals("") && !confirm_pass.equals("") && pass.equals(confirm_pass)) {  //如果为空请重新填写
+            user = new User();
+            user.setPhone(phone);
+            user.setNickname(nickname);
+            user.setPassword(pass);
 
-            }
-        } else {
-            Toast.makeText(RegisterActivity.this, "输入框不能为空", Toast.LENGTH_SHORT).show();
+            token = obtainUserToken(phone, nickname, ConstantUrl.imageDefaultUrl);  //获取token
+            user.setToken(token);
         }
-        return user;
+
     }
 
 
@@ -229,9 +229,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 obtainUserRegisterInfo();
 
 
-
-
-
                 break;
             default:
                 break;
@@ -243,13 +240,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
      *
      * @throws IOException
      */
-    private  void SendHttpRegister() throws IOException {
+    private void SendHttpRegister() throws IOException {
         //添加圆形进度条（封装好，随时可以调用）
-        userJsonString = new Gson().toJson(new User(phone, nickname, pass, token));
-        token = "eoHOTFV44Y430VthkEJLUaFKKP/7F85h1jIAC7xxzrOxlCA+QzJUQkOUSvORoDj1XS8d3cb7Ti9ilL2nygPD4Msu60IN+uAf";
-        System.out.println("请求url头部="+ConstantUrl.userUrl + ConstantUrl.userlogin_interface);
-        //System.out.println(userJsonString);
 
+        userJsonString = new Gson().toJson(new User(phone, user.getNickname(), user.getPassword(), token));
         //发起注册请求
         OkHttpUtils
                 .postString()
@@ -258,40 +252,30 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 .content(userJsonString)
                 .build()
                 .execute(new MyStringCallback());
-        System.out.println("json处理后格式："+userJsonString);
-        /*Gson gson = new Gson();
-        User user = new Gson().fromJson(userJsonString, User.class);
-
-        System.out.println("打印json数据转换后的User：" + user.toString());*/
+        System.out.println("json处理后格式：" + userJsonString);
     }
 
-    public class MyStringCallback extends StringCallback
-    {
+    public class MyStringCallback extends StringCallback {
         @Override
-        public void onBefore(Request request, int id)
-        {
+        public void onBefore(Request request, int id) {
             setTitle("loading...");
         }
 
         @Override
-        public void onAfter(int id)
-        {
+        public void onAfter(int id) {
             setTitle("Sample-okHttp");
         }
 
         @Override
-        public void onError(Call call, Exception e, int id)
-        {
+        public void onError(Call call, Exception e, int id) {
             e.printStackTrace();
-            System.out.println("请求地址："+ConstantUrl.userUrl + ConstantUrl.userlogin_interface + userJsonString);
+            System.out.println("请求地址：" + ConstantUrl.userUrl + ConstantUrl.userlogin_interface + userJsonString);
             tv_message.setText("onError:" + e.getMessage());
         }
 
         @Override
-        public void onResponse(String response, int id)
-        {
-            switch (id)
-            {
+        public void onResponse(String response, int id) {
+            switch (id) {
                 case 100:
                     Toast.makeText(RegisterActivity.this, "http", Toast.LENGTH_SHORT).show();
                     break;
@@ -302,12 +286,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             Log.e(TAG, "onResponse：complete");
             tv_message.setText("onResponse:" + response);
             System.out.println("注册成功");
-            startActivity(new Intent(RegisterActivity.this,LoginActivity.class));  //跳转到登录界面
+            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));  //跳转到登录界面
         }
 
         @Override
-        public void inProgress(float progress, long total, int id)
-        {
+        public void inProgress(float progress, long total, int id) {
             Log.e(TAG, "inProgress:" + progress);
         }
     }
