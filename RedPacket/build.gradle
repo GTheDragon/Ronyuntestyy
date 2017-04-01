@@ -20,6 +20,8 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile files('libs/alipaySdk-20160516.jar')
+    provided files('../app/libs/gson-2.2.1.jar')
+    compile files('libs/jrmfry.jar')
 }
 

@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 
 import com.yy.rongyuntest.R;
-import com.yy.rongyuntest.application.App;
+import com.yy.rongyuntest.application.YYApplication;
 import com.yy.rongyuntest.context.DemoContext;
 
 import java.util.Collection;
@@ -188,7 +188,7 @@ public class ConversationActivity extends FragmentActivity {
      */
     private void reconnect(String token) {
 
-        if (getApplicationInfo().packageName.equals(App.getCurProcessName(getApplicationContext()))) {
+        if (getApplicationInfo().packageName.equals(YYApplication.getCurProcessName(getApplicationContext()))) {
 
             RongIM.connect(token, new RongIMClient.ConnectCallback() {
                 @Override

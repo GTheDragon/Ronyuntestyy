@@ -53,20 +53,30 @@
                 android:textColorHint="#ffffff" />
 
             <Button
-                android:id="@+id/id_bt_sms"
+                android:id="@+id/id_bt_bind"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:text="手机验证" />
         </LinearLayout>
-
+        <EditText
+            android:id="@+id/id_et_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="昵称..."
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
+            android:text="yy"/>
         <EditText
             android:id="@+id/id_et_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:hint="密码..."
-            android:textColorHint="#ffffff" />
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
+            android:text="123"/>
 
         <EditText
             android:id="@+id/id_et_confirm_password"
@@ -74,21 +84,24 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:hint="确认密码..."
-            android:textColorHint="#ffffff" />
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
+            android:text="123"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:hint="注册补充..."
+            android:textColor="#ffffff"
             android:textColorHint="#ffffff" />
 
-        <EditText
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/id_tv_message"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:hint="注册补充..."
-            android:textColorHint="#ffffff" />
+            android:textColor="#ffffff"
+            android:hint="测试结果..."/>
 
     </LinearLayout>
 
@@ -99,6 +112,11 @@
         android:gravity="center"
         android:orientation="horizontal">
 
+        <Button
+            android:id="@+id/id_bt_okhttptest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="okhttp测试" />
         <Button
             android:id="@+id/id_bt_register"
             android:layout_width="wrap_content"

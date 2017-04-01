@@ -1,1 +1,1 @@
-include ':app', ':IMKit', ':RedPacket'
+include ':app', ':IMKit', ':RedPacket', ':okhttputils'

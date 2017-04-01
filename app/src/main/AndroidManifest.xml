@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.yy.rongyuntest">
-    <!--融云所需权限-->
+
+    <!-- 融云所需权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -20,7 +21,7 @@
     <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
-    <!--短信SMS所需权限-->
+    <!-- 短信SMS所需权限 -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -31,8 +32,11 @@
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+
+
     <application
-        android:name=".application.App"
+        android:name=".application.YYApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
@@ -50,15 +54,16 @@
         <activity
             android:name=".activity.LoginActivity"
             android:windowSoftInputMode="adjustPan" />
-        <!--短信验证界面-->
+        <!-- 短信验证界面 -->
         <activity
             android:name="com.mob.tools.MobUIShell"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
-        <!--注册界面-->
-        <activity android:name=".activity.RegisterActivity"
-            android:windowSoftInputMode="adjustPan" ></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <!-- 注册界面 -->
+        <activity
+            android:name=".activity.RegisterActivity"
+            android:windowSoftInputMode="adjustPan" />
         <!-- 测试登录界面 -->
         <activity
             android:name=".activity.MainActivity"
@@ -157,7 +162,7 @@
             android:name="RONG_CLOUD_APP_KEY"
             android:value="uwd1c0sxugt21" />
 
-
+        <activity android:name=".activity.okhttptest.TestOkhttpActivity"/>
     </application>
 
 </manifest>

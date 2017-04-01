@@ -9,11 +9,17 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yy.rongyuntest.R;
+import com.yy.rongyuntest.activity.okhttptest.TestOkhttpActivity;
 import com.yy.rongyuntest.bean.Friend;
 import com.yy.rongyuntest.utils.RongCloudMethodUtil;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +27,8 @@ import java.util.List;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.UserInfo;
+import okhttp3.Call;
+import okhttp3.Request;
 
 
 public class MainActivity extends Activity implements View.OnClickListener {
@@ -43,6 +51,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private final String urlPath = "http://img.woyaogexing.com/2016/10/14/c248ae77be5a04d2!200x200.jpg";
     private String pass = null;
     private String token = null;
+
+
+    private String mTestUrl = "http://118.89.47.137/";  //gethtml
+
+
+    private TextView mTv;
+    private ImageView mImageView;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +105,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         userIdList = new ArrayList<Friend>();
         RongUtil = new RongCloudMethodUtil();
+
+        mTv = (TextView) findViewById(R.id.id_textview);
+        mImageView = (ImageView) findViewById(R.id.id_imageview);
+        mProgressBar = (ProgressBar) findViewById(R.id.id_progress);
+        mProgressBar.setMax(100);
     }
 
+    /**
+     * 获取用户输入的数据
+     */
     private void obtainUserOrPass() {
         //获取用户名密码
         name = et_username.getText().toString();
@@ -98,6 +122,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
         nickname = et_nickname.getText().toString();
     }
 
+    /**
+     * 根据RongCloud的Token登录
+     * @param token
+     */
     private void connectRongServer(String token) {
 
         RongIM.connect(token, new RongIMClient.ConnectCallback() {
@@ -151,18 +179,32 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 connectRongServer(token2);
                 break;
             case R.id.id_token:
-                //模拟用户的昵称title和图片url
-                System.out.println("获取token");
-
-                obtainUserOrPass();  //获取用户输入的用户名和密码
+                //获取用户输入的用户名和密码
+                obtainUserOrPass();
                 if (!name.equals("") && !pass.equals("")) {
+                    //通过用户注册信息获取token
                     token = obtainToken(name, nickname, urlPath);
-                    Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+                    if(token != null){
+                        //发起注册请求
+                        String url = mTestUrl + "yy_login?";
+                        OkHttpUtils
+                                .post()
+                                .url(url)
+                                .addParams("username",name)
+                                .addParams("password",pass)
+                                .build()
+                                .execute(new MyStringCallback());
+                    }else{
+                        Toast.makeText(MainActivity.this, "Token不能为空", Toast.LENGTH_SHORT).show();
+                    }
                 } else if (name.equals("") && pass.equals("")) {
                     Toast.makeText(MainActivity.this, "用户名密码不能为空", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.id_tokenlogin:
+                //现在用户列表中添加Friend实体
+                //先在服务器数据库查询用户名密码是否正确，如果正确，取到用户对应的token，如果不正确，提示用户名密码错误
+                //根据RongCloud的Token登录
                 userIdList.add(new Friend(name, nickname, urlPath));
                 connectRongServer(token);
             default:
@@ -170,6 +212,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    /**
+     * 获取token
+     * @param username  用户id
+     * @param nickname  用户昵称
+     * @param urlPath   默认头像地址
+     * @return
+     */
     private String obtainToken(final String username, final String nickname, final String urlPath) {
 
         if (username != null && nickname != null && urlPath != null) {
@@ -183,6 +232,52 @@ public class MainActivity extends Activity implements View.OnClickListener {
             thread.start();
         }
         return token;
+    }
+
+    public class MyStringCallback extends StringCallback
+    {
+        @Override
+        public void onBefore(Request request, int id)
+        {
+            setTitle("loading...");
+        }
+
+        @Override
+        public void onAfter(int id)
+        {
+            setTitle("Sample-okHttp");
+        }
+
+        @Override
+        public void onError(Call call, Exception e, int id)
+        {
+            e.printStackTrace();
+            mTv.setText("onError:" + e.getMessage());
+        }
+
+        @Override
+        public void onResponse(String response, int id)
+        {
+            Log.e(TAG, "onResponse：complete");
+            mTv.setText("onResponse:" + response);
+
+            switch (id)
+            {
+                case 100:
+                    Toast.makeText(MainActivity.this, "http", Toast.LENGTH_SHORT).show();
+                    break;
+                case 101:
+                    Toast.makeText(MainActivity.this, "https", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+
+        @Override
+        public void inProgress(float progress, long total, int id)
+        {
+            Log.e(TAG, "inProgress:" + progress);
+            mProgressBar.setProgress((int) (100 * progress));
+        }
     }
 
 
